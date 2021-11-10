@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uri.Query.String.Parser", "Uri.Query.String.Parser\Uri.Query.String.Parser.csproj", "{BD9087D5-DC76-4032-A0EB-BD49D0DE19B1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BD9087D5-DC76-4032-A0EB-BD49D0DE19B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD9087D5-DC76-4032-A0EB-BD49D0DE19B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD9087D5-DC76-4032-A0EB-BD49D0DE19B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD9087D5-DC76-4032-A0EB-BD49D0DE19B1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9216D53A-EA0A-4CFD-8C14-DB84AD2B84B9}
+	EndGlobalSection
+EndGlobal
