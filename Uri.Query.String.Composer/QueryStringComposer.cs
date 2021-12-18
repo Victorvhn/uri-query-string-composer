@@ -1,0 +1,113 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using Uri.Query.String.Composer.Attributes;
+using Uri.Query.String.Composer.Converters;
+using Uri.Query.String.Composer.Identifiers;
+
+namespace Uri.Query.String.Composer
+{
+    public static class QueryStringComposer
+    {
+        public static System.Uri Compose(string baseUrl, object? queryStringObject = null)
+        {
+            var uri = new System.Uri(baseUrl);
+
+            return Compose(uri, queryStringObject);
+        }
+
+        public static System.Uri Compose(System.Uri uri, object? queryStringObject)
+        {
+            if (queryStringObject == null)
+                return uri;
+
+            var parameters = GetQueryParameters(queryStringObject);
+
+            var finalUri = MergeParametersInUri(uri, parameters);
+
+            return finalUri;
+        }
+
+        private static System.Uri MergeParametersInUri(System.Uri uri, IDictionary<string, string> parameters)
+        {
+            var stringBuilder = new StringBuilder();
+
+            foreach (var (key, value) in parameters)
+                stringBuilder.Append($"&{key}={value}");
+
+            var uriBuilder = new UriBuilder(uri);
+
+            if (!uriBuilder.Query.Any())
+                stringBuilder[0] = Constants.Interrogation;
+
+            var query = stringBuilder.ToString();
+
+            uriBuilder.Query += query;
+
+            return uriBuilder.Uri;
+        }
+
+        private static IDictionary<string, string> GetQueryParameters(object queryStringObject)
+        {
+            if (Identifier.IsDictionary(queryStringObject.GetType()))
+                return (IDictionary<string, string>) queryStringObject;
+
+            var properties = queryStringObject
+                .GetType()
+                .GetProperties()
+                .Where(GetPropertiesWithoutIgnoreAttribute);
+
+            var parameters = new Dictionary<string, string>();
+
+            foreach (var property in properties)
+            {
+                var key = GetPropertyKey(property);
+                var value = GetPropertyValue(queryStringObject, property);
+
+                parameters.Add(key, value);
+            }
+
+            return parameters;
+        }
+
+        private static bool GetPropertiesWithoutIgnoreAttribute(PropertyInfo propertyInfo) =>
+            propertyInfo.GetCustomAttribute(typeof(QueryStringIgnoreAttribute)) == null;
+
+        private static string GetPropertyKey(MemberInfo property)
+        {
+            var customNameAttribute = property.GetCustomAttribute(typeof(QueryStringNameAttribute));
+
+            return customNameAttribute != null
+                ? ((QueryStringNameAttribute) customNameAttribute).Name
+                : property.Name;
+        }
+
+        private static string GetPropertyValue(object @object, PropertyInfo property)
+        {
+            string value;
+            if (Identifier.IsList(property))
+            {
+                value = Converter.FromList(
+                    (IList?) property.GetValue(@object)
+                );
+            }
+            else if (Identifier.IsDateTime(property))
+            {
+                value = Converter.FromDateTime(
+                    (DateTime?) property.GetValue(@object)
+                );
+            }
+            else
+            {
+                value = Converter.FromObject(
+                    property.GetValue(@object)
+                );
+            }
+
+            return value;
+        }
+    }
+}
