@@ -63,7 +63,7 @@ namespace Uri.Query.String.Composer
             var stringBuilder = new StringBuilder();
 
             foreach (var (key, value) in parameters)
-                stringBuilder.Append($"&{key}={value}");
+                stringBuilder.Append($"{Constants.Ampersand}{key}={value}");
 
             var uriBuilder = new UriBuilder(uri);
 

@@ -8,5 +8,6 @@ namespace Uri.Query.String.Composer
         public const string DateTimeFormat = "s";
         public const string Comma = ",";
         public const char Interrogation = '?';
+        public const char Ampersand = '&';
     }
 }
