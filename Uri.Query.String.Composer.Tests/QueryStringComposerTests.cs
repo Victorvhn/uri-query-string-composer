@@ -1,6 +1,7 @@
 ﻿using System;
 using FluentAssertions;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Uri.Query.String.Composer.Attributes;
 using Xunit;
 
@@ -201,6 +202,7 @@ public class QueryStringComposerTests
             .Be("?aTest=testValue");
     }
 
+    [ExcludeFromCodeCoverage]
     private class TestClass
     {
         public TestClass()

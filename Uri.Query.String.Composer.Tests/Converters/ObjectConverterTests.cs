@@ -9,7 +9,7 @@ public class ObjectConverterTests
 {
     [Theory]
     [MemberData(nameof(Data))]
-    public void Should_convert_number_to_string(object? value, string expectedValue)
+    public void Should_convert_any_object_to_string(object? value, string expectedValue)
     {
         var convertedValue = Converter.FromObject(value);
 
