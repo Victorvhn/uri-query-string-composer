@@ -25,7 +25,7 @@ public class QueryStringComposerTests
     [Fact]
     public void Should_not_compose_query_string_if_no_query_object_is_provided_by_providing_an_uri()
     {
-        System.Uri uri = new System.Uri("http://localhost");
+        var uri = new System.Uri("http://localhost");
 
         var result = QueryStringComposer.Compose(uri);
 
