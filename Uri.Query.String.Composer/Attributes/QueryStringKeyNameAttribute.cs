@@ -3,9 +3,9 @@
 namespace Uri.Query.String.Composer.Attributes
 {
     [AttributeUsage(AttributeTargets.Property)]
-    internal class QueryStringNameAttribute : Attribute
+    internal class QueryStringKeyNameAttribute : Attribute
     {
-        public QueryStringNameAttribute(string name) =>
+        public QueryStringKeyNameAttribute(string name) =>
             Name = name;
 
         public string Name { get; }
