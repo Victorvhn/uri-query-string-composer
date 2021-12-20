@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Uri.Query.String.Composer.Identifiers
+namespace UriQueryStringComposer.Identifiers
 {
     internal static partial class Identifier
     {

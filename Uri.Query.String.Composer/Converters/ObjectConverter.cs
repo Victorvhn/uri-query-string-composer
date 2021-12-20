@@ -3,8 +3,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Web;
 
-[assembly: InternalsVisibleTo("Uri.Query.String.Composer.Tests")]
-namespace Uri.Query.String.Composer.Converters
+[assembly: InternalsVisibleTo("UriQueryStringComposer.Tests")]
+namespace UriQueryStringComposer.Converters
 {
     internal static partial class Converter
     {

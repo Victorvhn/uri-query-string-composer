@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Uri.Query.String.Composer\Uri.Query.String.Composer.csproj" />
+    <ProjectReference Include="..\Uri.Query.String.Composer\UriQueryStringComposer.csproj" />
   </ItemGroup>
 
 </Project>

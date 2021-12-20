@@ -1,10 +1,11 @@
-﻿using System;
+﻿using FluentAssertions;
+using System;
 using System.Collections.Generic;
-using FluentAssertions;
-using Uri.Query.String.Composer.Converters;
 using Xunit;
+using UriQueryStringComposer.Converters;
 
-namespace Uri.Query.String.Composer.Tests.Converters;
+
+namespace UriQueryStringComposer.Tests.Converters;
 
 public class DateTimeConverterTests
 {

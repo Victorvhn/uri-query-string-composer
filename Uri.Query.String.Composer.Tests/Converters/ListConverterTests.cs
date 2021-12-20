@@ -1,11 +1,10 @@
-﻿using System;
+﻿using FluentAssertions;
 using System.Collections;
 using System.Collections.Generic;
-using FluentAssertions;
-using Uri.Query.String.Composer.Converters;
+using UriQueryStringComposer.Converters;
 using Xunit;
 
-namespace Uri.Query.String.Composer.Tests.Converters;
+namespace UriQueryStringComposer.Tests.Converters;
 
 public class ListConverterTests
 {
@@ -49,6 +48,6 @@ public class ListConverterTests
         {
             new object[] { new List<string> {"test", "random", "ola"}, "test,random,ola"},
             new object[] { new List<int> { 1,2,3 }, "1,2,3"},
-            new object[] { new List<double> { 1.2,2.3,3.434 }, "1.2,2.3,3.434"}
+            new object[] { new List<double> { 1.2,2.3,3.434 }, "1%2c2,2%2c3,3%2c434" }
         };
 }

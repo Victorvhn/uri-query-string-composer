@@ -4,22 +4,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using Uri.Query.String.Composer.Attributes;
-using Uri.Query.String.Composer.Converters;
-using Uri.Query.String.Composer.Identifiers;
+using UriQueryStringComposer.Attributes;
+using UriQueryStringComposer.Converters;
+using UriQueryStringComposer.Identifiers;
 
-namespace Uri.Query.String.Composer
+namespace UriQueryStringComposer
 {
     public static class QueryStringComposer
     {
-        public static System.Uri Compose(string baseUrl, object? queryStringObject = null)
+        public static Uri Compose(string baseUrl, object? queryStringObject = null)
         {
-            var uri = new System.Uri(baseUrl);
+            var uri = new Uri(baseUrl);
 
             return Compose(uri, queryStringObject);
         }
 
-        public static System.Uri Compose(System.Uri uri, object? queryStringObject = null)
+        public static Uri Compose(Uri uri, object? queryStringObject = null)
         {
             if (queryStringObject == null)
                 return uri;
@@ -37,7 +37,7 @@ namespace Uri.Query.String.Composer
         private static IDictionary<string, string> GetQueryParameters(object queryStringObject)
         {
             if (Identifier.IsDictionary(queryStringObject.GetType()))
-                return (IDictionary<string, string>) queryStringObject;
+                return (IDictionary<string, string>)queryStringObject;
 
             var properties = queryStringObject
                 .GetType()
@@ -58,7 +58,7 @@ namespace Uri.Query.String.Composer
             return parameters;
         }
 
-        private static System.Uri MergeParametersInUri(System.Uri uri, IDictionary<string, string> parameters)
+        private static Uri MergeParametersInUri(Uri uri, IDictionary<string, string> parameters)
         {
             var stringBuilder = new StringBuilder();
 
@@ -85,23 +85,23 @@ namespace Uri.Query.String.Composer
             var customNameAttribute = property.GetCustomAttribute(typeof(QueryStringKeyNameAttribute));
 
             return customNameAttribute != null
-                ? ((QueryStringKeyNameAttribute) customNameAttribute).Name
+                ? ((QueryStringKeyNameAttribute)customNameAttribute).Name
                 : property.Name;
         }
-        
+
         private static string GetPropertyValue(object @object, PropertyInfo property)
         {
             string value;
             if (Identifier.IsList(property))
             {
                 value = Converter.FromList(
-                    (IList?) property.GetValue(@object)
+                    (IList?)property.GetValue(@object)
                 );
             }
             else if (Identifier.IsDateTime(property))
             {
                 value = Converter.FromDateTime(
-                    (DateTime?) property.GetValue(@object)
+                    (DateTime?)property.GetValue(@object)
                 );
             }
             else

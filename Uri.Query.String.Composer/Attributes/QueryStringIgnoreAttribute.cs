@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Uri.Query.String.Composer.Attributes
+namespace UriQueryStringComposer.Attributes
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class QueryStringIgnoreAttribute : Attribute

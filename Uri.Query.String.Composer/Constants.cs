@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("Uri.Query.String.Composer.Tests")]
-namespace Uri.Query.String.Composer
+[assembly: InternalsVisibleTo("UriQueryStringComposer.Tests")]
+namespace UriQueryStringComposer
 {
     internal static class Constants
     {

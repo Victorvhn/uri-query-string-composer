@@ -1,11 +1,11 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Uri.Query.String.Composer.Attributes;
+using UriQueryStringComposer.Attributes;
 using Xunit;
 
-namespace Uri.Query.String.Composer.Tests;
+namespace UriQueryStringComposer.Tests;
 
 public class QueryStringComposerTests
 {
@@ -25,7 +25,7 @@ public class QueryStringComposerTests
     [Fact]
     public void Should_not_compose_query_string_if_no_query_object_is_provided_by_providing_an_uri()
     {
-        var uri = new System.Uri("http://localhost");
+        var uri = new Uri("http://localhost");
 
         var result = QueryStringComposer.Compose(uri);
 
@@ -132,7 +132,7 @@ public class QueryStringComposerTests
         result
             .Query
             .Should()
-            .Be("?Obj1=9173212&Obj2=123.43");
+            .Be("?Obj1=9173212&Obj2=123%2c43");
     }
 
     [Fact]
@@ -207,8 +207,8 @@ public class QueryStringComposerTests
     {
         public TestClass()
         {
-            List = new List<string>{ "1", "2" };
-            ListToIgnore = new List<int>{ 1, 2 };
+            List = new List<string> { "1", "2" };
+            ListToIgnore = new List<int> { 1, 2 };
         }
 
         [QueryStringKeyName("myList")]
