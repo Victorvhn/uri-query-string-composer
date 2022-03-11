@@ -1,4 +1,4 @@
-# Uri QueryString Composer
+# Uri QueryString Composer [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Victorvhn/uri-query-string-composer/blob/main/LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/Victorvhn/uri-query-string-composer/pulls)
 
 Have you ever needed to make an http call and had to assemble a giant query string entirely manually?
 
