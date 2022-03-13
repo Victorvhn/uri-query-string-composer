@@ -132,7 +132,7 @@ public class QueryStringComposerTests
         result
             .Query
             .Should()
-            .Be("?Obj1=9173212&Obj2=123%2c43");
+            .Be("?Obj1=9173212&Obj2=123.43");
     }
 
     [Fact]

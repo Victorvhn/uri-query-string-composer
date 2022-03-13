@@ -22,8 +22,8 @@ public class ObjectConverterTests
         new List<object?[]>
         {
             new object?[] { 0m, "0" },
-            new object?[] { 0.0001m, "0%2c0001" },
-            new object?[] { 23245.15546m, "23245%2c15546" },
+            new object?[] { 0.0001m, "0.0001" },
+            new object?[] { 23245.15546m, "23245.15546" },
             new object?[] { 1, "1" },
             new object?[] { 2564789, "2564789" },
             new object?[] { -251, "-251" },
@@ -33,10 +33,10 @@ public class ObjectConverterTests
             new object?[] { null, string.Empty },
             new object?[] { (byte)0b101111, "47" },
             new object?[] { (byte)1, "1" },
-            new object?[] { 0.0001, "0%2c0001" },
-            new object?[] { 23245.15546, "23245%2c15546" },
-            new object?[] { (float)49841.14, "49841%2c14" },
-            new object?[] { (float)-49841.14, "-49841%2c14" },
+            new object?[] { 0.0001, "0.0001" },
+            new object?[] { 23245.15546, "23245.15546" },
+            new object?[] { (float)49841.14, "49841.14" },
+            new object?[] { (float)-49841.14, "-49841.14" },
             new object?[] { (sbyte)-0x2F, "-47" },
             new object?[] { "a 9:hb", "a+9%3Ahb" },
             new object?[] { "", string.Empty }
