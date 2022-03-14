@@ -50,7 +50,7 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
         
     - name: Publish on version change
-      uses: rohith/publish-nuget@v2
+      uses: alirezanet/publish-nuget@v2
       with:
         PROJECT_FILE_PATH: Uri.Query.String.Composer/UriQueryStringComposer.csproj
         PACKAGE_NAME: Uri.QueryString.Composer
