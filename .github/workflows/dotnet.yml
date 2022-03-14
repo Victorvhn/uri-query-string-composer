@@ -67,13 +67,14 @@ jobs:
         NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
 
     - name: Publish to github on version change
-      uses: alirezanet/publish-nuget@v3.0.1
+      uses: victorvhn/publish-nuget@v3.0.0
       with:
         PROJECT_FILE_PATH: Uri.Query.String.Composer/UriQueryStringComposer.csproj
         PACKAGE_NAME: Uri.QueryString.Composer
         VERSION_REGEX: <PackageVersion>(.*)<\/PackageVersion>
-        NUGET_KEY: ${{ secrets.GITHUB_TOKEN }}
-        NUGET_SOURCE: https://nuget.pkg.github.com/victorvhn
+        GITHUB_KEY: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_SOURCE: https://nuget.pkg.github.com/victorvhn
+        TAG_COMMIT: false
 
 #    - name: Publish to github on version change
 #      run: dotnet nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/victorvhn/index.json" --skip-duplicate
