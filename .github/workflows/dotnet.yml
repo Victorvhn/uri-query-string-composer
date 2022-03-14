@@ -72,7 +72,7 @@ jobs:
         PROJECT_FILE_PATH: Uri.Query.String.Composer/UriQueryStringComposer.csproj
         PACKAGE_NAME: Uri.QueryString.Composer
         VERSION_REGEX: <PackageVersion>(.*)<\/PackageVersion>
-        GITHUB_KEY: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_KEY: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         GITHUB_SOURCE: https://nuget.pkg.github.com/victorvhn
         TAG_COMMIT: false
 
