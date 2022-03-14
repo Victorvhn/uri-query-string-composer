@@ -49,10 +49,22 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
         
-    - name: Publish on version change
+    - name: Restore dependencies
+      run: dotnet restore
+        
+    - name: Build application
+      run: dotnet build --no-restore --configuration Release
+        
+    - name: Pack application
+      run: dotnet pack --no-build --configuration Release -o .
+        
+    - name: Publish to nuget on version change
       uses: alirezanet/publish-nuget@v3.0.1
       with:
         PROJECT_FILE_PATH: Uri.Query.String.Composer/UriQueryStringComposer.csproj
         PACKAGE_NAME: Uri.QueryString.Composer
         VERSION_REGEX: <PackageVersion>(.*)<\/PackageVersion>
-        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+        NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
+
+    - name: Publish to github on version change
+      run: dotnet nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/victorvhn/index.json" --skip-duplicate
