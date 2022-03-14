@@ -25,8 +25,14 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
-    - name: Build
+    - name: Build with Release configuration
       run: dotnet build --configuration Release --no-restore
 
-    - name: Test
-      run: dotnet test -v n /p:CollectCoverage=true /p:CoverletOutputFormat=\"opencover,lcov,cobertura\" /p:CoverletOutput='/root/project/coverage_results/'
+    - name: Run tests
+      run: dotnet test -v n /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:TestResults/
+      
+    - name: Publish coverage report to coveralls.io   
+      uses: coverallsapp/github-action@master   
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }} 
+        path-to-lcov: FeatureFlags/FeatureFlags.Tests/TestResults/coverage.info 
