@@ -29,10 +29,10 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Run tests
-      run: dotnet test -v n /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput='${{ env.GITHUB_PATH }}/TestResults/'
+      run: dotnet test -v n /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=TestResults/
       
     - name: Publish coverage report to coveralls.io   
       uses: coverallsapp/github-action@master   
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }} 
-        path-to-lcov: '${{ env.GITHUB_PATH }}/TestResults/coverage.info'
+        path-to-lcov: Uri.Query.String.Composer.Tests/TestResults/coverage.info
