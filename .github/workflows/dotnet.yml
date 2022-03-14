@@ -52,9 +52,9 @@ jobs:
     - name: Publish on version change
       uses: rohith/publish-nuget@v2
       with:
-        PROJECT_FILE_PATH: Uri.Query.String.Composer/Uri.Query.String.Composer.csproj
+        PROJECT_FILE_PATH: Uri.Query.String.Composer/UriQueryStringComposer.csproj
         PACKAGE_NAME: Uri.QueryString.Composer
-        VERSION_FILE_PATH: Uri.Query.String.Composer/Uri.Query.String.Composer.csproj
+        VERSION_FILE_PATH: Uri.Query.String.Composer/UriQueryStringComposer.csproj
         VERSION_REGEX: <Version>(.*)<\/Version>
         TAG_COMMIT: true
         TAG_FORMAT: v*
