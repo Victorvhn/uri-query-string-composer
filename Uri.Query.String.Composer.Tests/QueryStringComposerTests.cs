@@ -202,6 +202,29 @@ public class QueryStringComposerTests
             .Be("?aTest=testValue");
     }
 
+    [Fact]
+    public void Should_throw_an_exception_when_receive_a_complex_list_to_compose()
+    {
+        const string baseUrl = "http://localhost/test";
+
+        var a = new
+        {
+            Test = new List<TestClass>
+            {
+                new(),
+                new()
+            },
+            Test2 = new List<string> { "a" }
+        };
+
+        Action action = () => QueryStringComposer.Compose(baseUrl, a);
+
+        action
+            .Should()
+            .Throw<FormatException>()
+            .WithMessage("Complex lists are not supported.");
+    }
+
     [ExcludeFromCodeCoverage]
     private class TestClass
     {

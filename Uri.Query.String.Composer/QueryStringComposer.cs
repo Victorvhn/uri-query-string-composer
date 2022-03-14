@@ -92,7 +92,11 @@ namespace UriQueryStringComposer
         private static string GetPropertyValue(object @object, PropertyInfo property)
         {
             string value;
-            if (Identifier.IsList(property))
+            if (Identifier.IsComplexList(property))
+            {
+                throw new FormatException("Complex lists are not supported.");
+            }
+            if (Identifier.IsPrimitiveList(property))
             {
                 value = Converter.FromList(
                     (IList?)property.GetValue(@object)
