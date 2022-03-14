@@ -55,7 +55,7 @@ jobs:
         PROJECT_FILE_PATH: Uri.Query.String.Composer/UriQueryStringComposer.csproj
         PACKAGE_NAME: Uri.QueryString.Composer
         VERSION_FILE_PATH: Uri.Query.String.Composer/UriQueryStringComposer.csproj
-        VERSION_REGEX: <Version>(.*)<\/Version>
+        VERSION_REGEX: <PackageVersion>(.*)<\/PackageVersion>
         TAG_COMMIT: true
         TAG_FORMAT: v*
         NUGET_KEY: ${{secrets.NUGET_API_KEY}}
