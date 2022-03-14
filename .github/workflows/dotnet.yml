@@ -58,7 +58,7 @@ jobs:
         NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
 
     - name: Publish to github on version change
-      uses: victorvhn/publish-nuget@v3.0.0
+      uses: Victorvhn/publish-github@v3.0.0
       with:
         PROJECT_FILE_PATH: Uri.Query.String.Composer/UriQueryStringComposer.csproj
         PACKAGE_NAME: Uri.QueryString.Composer
