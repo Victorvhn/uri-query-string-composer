@@ -73,7 +73,7 @@ jobs:
         PACKAGE_NAME: Uri.QueryString.Composer
         VERSION_REGEX: <PackageVersion>(.*)<\/PackageVersion>
         NUGET_KEY: ${{ secrets.GITHUB_TOKEN }}
-        NUGET_SOURCE: https://nuget.pkg.github.com/victorvhn/index.json
+        NUGET_SOURCE: https://nuget.pkg.github.com/victorvhn
 
 #    - name: Publish to github on version change
 #      run: dotnet nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/victorvhn/index.json" --skip-duplicate
