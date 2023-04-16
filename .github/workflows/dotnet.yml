@@ -70,7 +70,10 @@ jobs:
           try {
             const versions = JSON.parse(${{ steps.get-nuget-published-packages.outputs.response }});
             const lastVersions = versions[versions.length -1];
-            return lastVersions == ${{ steps.get-package-version.outputs.package-version }}
+            return lastVersions == ${{ steps.get-package-version.outputs.package-version }};
+          } catch(error) {
+            core.error("Error while reading or parsing the JSON");
+            core.setFailed(error);
           }
         
 #    - name: Publish to nuget on version change
