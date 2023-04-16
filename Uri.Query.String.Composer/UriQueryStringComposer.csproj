@@ -12,7 +12,7 @@
     <PackageProjectUrl>https://github.com/Victorvhn/uri-query-string-composer</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageId>Uri.QueryString.Composer</PackageId>
-    <PackageVersion>1.0.6-alpha</PackageVersion>
+    <PackageVersion>2.0.0</PackageVersion>
     <Product>Uri.QueryString.Composer</Product>
     <PackageTags>http-client;open-source;querystring</PackageTags>
     <PackageReleaseNotes>It's a simple library that allows you to turn a class into a query string for https calls.</PackageReleaseNotes>
@@ -23,6 +23,10 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CaseExtensions" Version="1.1.0" />
   </ItemGroup>
 
 </Project>

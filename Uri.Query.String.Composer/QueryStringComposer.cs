@@ -10,7 +10,7 @@ using UriQueryStringComposer.Identifiers;
 
 namespace UriQueryStringComposer
 {
-    public static class QueryStringComposer
+    public static partial class QueryStringComposer
     {
         public static Uri Compose(string baseUrl, object? queryStringObject = null)
         {
@@ -68,7 +68,7 @@ namespace UriQueryStringComposer
             var uriBuilder = new UriBuilder(uri);
 
             if (!uriBuilder.Query.Any())
-                stringBuilder[0] = Constants.Interrogation;
+                stringBuilder[0] = Constants.QuestionMark;
 
             var query = stringBuilder.ToString();
 
@@ -79,15 +79,6 @@ namespace UriQueryStringComposer
 
         private static bool GetPropertiesWithoutIgnoreAttribute(PropertyInfo propertyInfo) =>
             propertyInfo.GetCustomAttribute(typeof(QueryStringIgnoreAttribute)) == null;
-
-        private static string GetPropertyKey(MemberInfo property)
-        {
-            var customNameAttribute = property.GetCustomAttribute(typeof(QueryStringKeyNameAttribute));
-
-            return customNameAttribute != null
-                ? ((QueryStringKeyNameAttribute)customNameAttribute).Name
-                : property.Name;
-        }
 
         private static string GetPropertyValue(object @object, PropertyInfo property)
         {

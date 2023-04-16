@@ -7,7 +7,7 @@ namespace UriQueryStringComposer
     {
         public const string DateTimeFormat = "s";
         public const string Comma = ",";
-        public const char Interrogation = '?';
+        public const char QuestionMark = '?';
         public const char Ampersand = '&';
     }
 }
