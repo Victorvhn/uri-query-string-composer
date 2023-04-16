@@ -64,7 +64,7 @@ jobs:
         
     - name: Compare versions
       run: |
-        publishedVersions=${{ steps.get-nuget-published-packages.outputs.response.versions }}
+        publishedVersions=${{ steps.get-nuget-published-packages.outputs.response }}
         lastPublishedIndex=$(( ${#publishedVersions[@]} - 1 ))
         lastPublishedVersion=${publishedVersions[lastPublishedIndex]}
         echo "O último valor do array é: $lastPublishedVersion"
