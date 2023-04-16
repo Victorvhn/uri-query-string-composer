@@ -53,9 +53,18 @@ jobs:
       uses: kzrnm/get-net-sdk-project-versions-action@v1
       id: get-package-version
       with:
-          proj-path: Uri.Query.String.Composer/UriQueryStringComposer.csproj
+        proj-path: Uri.Query.String.Composer/UriQueryStringComposer.csproj
           
-    - run: echo "${{steps.get-package-version.outputs.package-version}}"
+    - name: Get NUGET published versions
+      uses: fjogeleit/http-request-action@v1
+      id: get-nuget-published-packages
+      with:
+        url: 'https://api.nuget.org/v3-flatcontainer/uri.querystring.composer/index.json'
+        method: 'GET'
+        
+    - name: Show Response
+      run: |
+        echo ${{ steps.get-nuget-published-packages.outputs.response }}
         
 #    - name: Publish to nuget on version change
 #      uses: alirezanet/publish-nuget@v3.0.4
