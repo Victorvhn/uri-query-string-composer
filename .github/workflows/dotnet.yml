@@ -53,8 +53,7 @@ jobs:
       uses: kzrnm/get-net-sdk-project-versions-action@v1
       id: get-package-version
       with:
-          file: Uri.Query.String.Composer/UriQueryStringComposer.csproj
-          regex: <PackageVersion>(.*)<\/PackageVersion>
+          proj-path: Uri.Query.String.Composer/UriQueryStringComposer.csproj
           
     - run: echo "${{steps.get-version.outputs.version}}"
         
