@@ -19,6 +19,28 @@ The implementation is available through a static class `QueryStringComposer`.
 
 _The two available overloads perform the same conversion._
 
+### Global configuration
+You can use the method `Configure` provided by `QueryStringComposerConfiguration` in your service configuration to change the key case style globally.
+
+``` csharp
+QueryStringComposerConfiguration.Configure(options =>
+{
+    options.KeyNameCaseStyle = StringCaseStyle.TrainCase;
+});
+```
+
+There are some supported style cases, they are:
+```csharp
+public enum StringCaseStyle
+{
+    CamelCase = 1,
+    PascalCase = 2,
+    SnakeCase = 3,
+    KebabCase = 4,
+    TrainCase = 5
+}
+```
+
 ### String overload
 
 Code result: `http://localhost?SomeName=Victor&SomeAge=20`
@@ -95,6 +117,27 @@ class YourClass
 
     [QueryStringIgnore]
     public string Password { get; set; }
+}
+```
+
+### QueryStringKeyCaseStyleAttribute
+In case you need to change the key case style of a single property and don't want to change it globally. You can use the `QueryStringKeyCaseStyleAttribute` attribute for this.
+
+Code result: `http://localhost?Key-In-Train-Case=value`
+``` csharp
+const string baseUrl = "http://localhost";
+
+var queryObject = new YourClass
+{
+    KeyInTrainCase = "value",
+};
+
+var result = QueryStringComposer.Compose(uri, queryObject);
+
+class YourClass
+{
+    [QueryStringKeyCaseStyleAttribute(StringCaseStyle.TrainCase)]
+    public string KeyInTrainCase { get; set; }
 }
 ```
 
