@@ -65,6 +65,7 @@ jobs:
     - name: Compare versions
       run: |
         publishedVersionsJson=${{ steps.get-nuget-published-packages.outputs.response }}
+        echo "Valor retornado da API do NuGet: $publishedVersionsJson"
         publishedVersionsObject=$(echo $publishedVersionsJson | jq -r .versions)
         publishedVersions=($(echo $publishedVersionsObject | jq -r '.[]'))
         lastPublishedVersion=${publishedVersions[-1]}
