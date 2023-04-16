@@ -1,8 +1,9 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using UriQueryStringComposer.Attributes;
+using UriQueryStringComposer.Enums;
 using Xunit;
 
 namespace UriQueryStringComposer.Tests;
@@ -119,7 +120,7 @@ public class QueryStringComposerTests
         result
             .Query
             .Should()
-            .Be("?DateTimeObj=2021-12-20T11:10:25");
+            .Be("?dateTimeObj=2021-12-20T11:10:25");
     }
 
     [Fact]
@@ -132,7 +133,7 @@ public class QueryStringComposerTests
         result
             .Query
             .Should()
-            .Be("?Obj1=9173212&Obj2=123.43");
+            .Be("?obj1=9173212&obj2=123.43");
     }
 
     [Fact]
@@ -202,6 +203,49 @@ public class QueryStringComposerTests
             .Be("?aTest=testValue");
     }
 
+    [Fact]
+    public void Should_use_custom_key_case_style_if_it_is_provided_by_attribute()
+    {
+        const string baseUrl = "http://localhost";
+
+        var queryObject = new TestClass
+        {
+            List = new List<string>(),
+            KebabCaseStyle = 1
+        };
+
+        var result = QueryStringComposer.Compose(baseUrl, queryObject);
+
+        result
+            .Query
+            .Should()
+            .Be("?kebab-case-style=1");
+    }
+    
+    [Fact]
+    public void Should_use_global_custom_key_case_style_if_it_is_provided()
+    {
+        const string baseUrl = "http://localhost";
+
+        var queryObject = new TestClass
+        {
+            List = new List<string>(),
+            GlobalCustomStyle = 4
+        };
+
+        QueryStringComposerConfiguration.Configure(options =>
+        {
+            options.KeyNameCaseStyle = StringCaseStyle.TrainCase;
+        });
+        
+        var result = QueryStringComposer.Compose(baseUrl, queryObject);
+
+        result
+            .Query
+            .Should()
+            .Be("?Global-Custom-Style=4");
+    }
+    
     [ExcludeFromCodeCoverage]
     private class TestClass
     {
@@ -219,5 +263,9 @@ public class QueryStringComposerTests
 
         [QueryStringKeyName("custom")]
         public int? Int { get; set; }
+        
+        [QueryStringKeyCaseStyle(StringCaseStyle.KebabCase)]
+        public int? KebabCaseStyle { get; set; }
+        public int? GlobalCustomStyle { get; set; }
     }
 }
