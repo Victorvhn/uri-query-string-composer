@@ -68,7 +68,7 @@ jobs:
         result-encoding: boolean
         script: |
           try {
-            const versions = JSON.parse("${{ steps.get-nuget-published-packages.outputs.response }}");
+            const versions = JSON.parse(${{ steps.get-nuget-published-packages.outputs.response }});
             const a = versions[0];
             return true;
           } catch(error) {
