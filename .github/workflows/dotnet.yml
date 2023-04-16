@@ -62,9 +62,12 @@ jobs:
         url: 'https://api.nuget.org/v3-flatcontainer/uri.querystring.composer/index.json'
         method: 'GET'
         
-    - name: Show Response
+    - name: Compare versions
       run: |
-        echo ${{ steps.get-nuget-published-packages.outputs.response }}
+        publishedVersions=${{ steps.get-nuget-published-packages.outputs.response.versions }}
+        lastPublishedIndex=$(( ${#publishedVersions[@]} - 1 ))
+        lastPublishedVersion=${publishedVersions[lastPublishedIndex]}
+        echo "O último valor do array é: $lastPublishedVersion"
         
 #    - name: Publish to nuget on version change
 #      uses: alirezanet/publish-nuget@v3.0.4
