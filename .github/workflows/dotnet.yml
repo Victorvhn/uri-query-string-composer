@@ -55,7 +55,7 @@ jobs:
       with:
           proj-path: Uri.Query.String.Composer/UriQueryStringComposer.csproj
           
-    - run: echo "${{steps.get-version.outputs.package-version}}"
+    - run: echo "${{steps.get-package-version.outputs.package-version}}"
         
 #    - name: Publish to nuget on version change
 #      uses: alirezanet/publish-nuget@v3.0.4
