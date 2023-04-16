@@ -14,7 +14,7 @@ jobs:
     name: Build and Test
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
@@ -42,7 +42,7 @@ jobs:
     needs: build_and_test
     if: github.ref == 'refs/heads/main'
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
@@ -50,7 +50,7 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
         
     - name: Publish to nuget on version change
-      uses: alirezanet/publish-nuget@v3.0.1
+      uses: alirezanet/publish-nuget@v3.0.4
       with:
         PROJECT_FILE_PATH: Uri.Query.String.Composer/UriQueryStringComposer.csproj
         PACKAGE_NAME: Uri.QueryString.Composer
