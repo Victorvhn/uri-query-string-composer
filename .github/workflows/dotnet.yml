@@ -69,7 +69,6 @@ jobs:
         script: |
           try {
             const versions = JSON.parse("${{ steps.get-nuget-published-packages.outputs.response }}");
-            const a = versions[0];
           } catch(error) {
             core.error("Error while reading or parsing the JSON");
             core.setFailed(error);
