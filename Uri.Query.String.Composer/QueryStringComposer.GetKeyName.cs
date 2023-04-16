@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using CaseExtensions;
 using UriQueryStringComposer.Attributes;
 using UriQueryStringComposer.Enums;
@@ -35,6 +36,7 @@ namespace UriQueryStringComposer
             return QueryStringComposerConfiguration.Options.KeyNameCaseStyle;
         }
 
+        [ExcludeFromCodeCoverage]
         private static string GetStyledKey(string key, StringCaseStyle style)
         {
             return style switch
