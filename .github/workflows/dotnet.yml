@@ -67,9 +67,7 @@ jobs:
         publishedVersionsJson=${{ steps.get-nuget-published-packages.outputs.response }}
         echo "Valor retornado da API do NuGet: $publishedVersionsJson"
         publishedVersionsObject=$(echo $publishedVersionsJson | jq -r .versions)
-        publishedVersions=($(echo $publishedVersionsObject | jq -r '.[]'))
-        lastPublishedVersion=${publishedVersions[-1]}
-        echo "O último valor do array é: $lastPublishedVersion"
+        echo "O último valor do array é: $publishedVersionsObject"
         
 #    - name: Publish to nuget on version change
 #      uses: alirezanet/publish-nuget@v3.0.4
