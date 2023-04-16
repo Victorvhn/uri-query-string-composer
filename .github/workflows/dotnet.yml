@@ -68,7 +68,7 @@ jobs:
         result-encoding: string
         script: |
           try {
-            const versions = JSON.parse("${{ steps.get-nuget-published-packages.outputs.response }}");
+            const versions = JSON.parse(${{ steps.get-nuget-published-packages.outputs.response }});
           } catch(error) {
             core.error("Error while reading or parsing the JSON");
             core.setFailed(error);
