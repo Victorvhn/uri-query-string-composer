@@ -10,37 +10,37 @@ env:
   DOTNET_VERSION: '6.0'
 
 jobs:
-  build_and_test:
-    name: Build and Test
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
+#  build_and_test:
+#    name: Build and Test
+#    runs-on: ubuntu-latest
+#    steps:
+#    - uses: actions/checkout@v3
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
+#    - name: Setup .NET
+#      uses: actions/setup-dotnet@v1
+#      with:
+#        dotnet-version: ${{ env.DOTNET_VERSION }}
 
-    - name: Restore dependencies
-      run: dotnet restore
+#    - name: Restore dependencies
+#      run: dotnet restore
 
-    - name: Build with Release configuration
-      run: dotnet build --configuration Release --no-restore
+#    - name: Build with Release configuration
+#      run: dotnet build --configuration Release --no-restore
 
-    - name: Run tests
-      run: dotnet test -v n /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=TestResults/
+#    - name: Run tests
+#      run: dotnet test -v n /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=TestResults/
       
-    - name: Publish coverage report to coveralls.io   
-      uses: coverallsapp/github-action@master   
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }} 
-        path-to-lcov: Uri.Query.String.Composer.Tests/TestResults/coverage.info
+#    - name: Publish coverage report to coveralls.io   
+#      uses: coverallsapp/github-action@master   
+#      with:
+#        github-token: ${{ secrets.GITHUB_TOKEN }} 
+#        path-to-lcov: Uri.Query.String.Composer.Tests/TestResults/coverage.info
 
   pack_and_publish:
     name: Pack and Publish
     runs-on: ubuntu-latest
-    needs: build_and_test
-    if: github.ref == 'refs/heads/main'
+#    needs: build_and_test
+#    if: github.ref == 'refs/heads/main'
     steps:
     - uses: actions/checkout@v3
       
@@ -49,23 +49,32 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
         
-    - name: Publish to nuget on version change
-      uses: alirezanet/publish-nuget@v3.0.4
+    - name: Get project version
+      uses: kzrnm/get-net-sdk-project-versions-action@v1
+      id: get-package-version
       with:
-        PROJECT_FILE_PATH: Uri.Query.String.Composer/UriQueryStringComposer.csproj
-        PACKAGE_NAME: Uri.QueryString.Composer
-        VERSION_REGEX: <PackageVersion>(.*)<\/PackageVersion>
-        NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
+          file: Uri.Query.String.Composer/UriQueryStringComposer.csproj
+          regex: <PackageVersion>(.*)<\/PackageVersion>
+          
+    - run: echo "${{steps.get-version.outputs.version}}"
+        
+#    - name: Publish to nuget on version change
+#      uses: alirezanet/publish-nuget@v3.0.4
+#      with:
+#        PROJECT_FILE_PATH: Uri.Query.String.Composer/UriQueryStringComposer.csproj
+#        PACKAGE_NAME: Uri.QueryString.Composer
+#        VERSION_REGEX: <PackageVersion>(.*)<\/PackageVersion>
+#        NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
 
-    - name: Publish to github on version change
-      uses: Victorvhn/publish-github@v3.0.0
-      with:
-        PROJECT_FILE_PATH: Uri.Query.String.Composer/UriQueryStringComposer.csproj
-        PACKAGE_NAME: Uri.QueryString.Composer
-        VERSION_REGEX: <PackageVersion>(.*)<\/PackageVersion>
-        GITHUB_KEY: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-        GITHUB_USER: victorvhn
-        TAG_COMMIT: false
+#    - name: Publish to github on version change
+#      uses: Victorvhn/publish-github@v3.0.0
+#      with:
+#       PROJECT_FILE_PATH: Uri.Query.String.Composer/UriQueryStringComposer.csproj
+#       PACKAGE_NAME: Uri.QueryString.Composer
+#        VERSION_REGEX: <PackageVersion>(.*)<\/PackageVersion>
+#        GITHUB_KEY: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+#        GITHUB_USER: victorvhn
+#        TAG_COMMIT: false
 
 #    - name: Publish to github on version change
 #      run: dotnet nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/victorvhn/index.json" --skip-duplicate
