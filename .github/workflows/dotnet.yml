@@ -17,7 +17,7 @@ jobs:
       - run: echo "A"
       - id: set
         run: |
-          echo "run_job_b=contains(['1','2','3'], '1')" >> $GITHUB_OUTPUT
+          echo "run_job_b=${contains(['1','2','3'], '1')}" >> $GITHUB_OUTPUT
     outputs:
       run_job_b: ${{ steps.set.outputs.run_job_b }}
       
