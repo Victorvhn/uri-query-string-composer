@@ -10,22 +10,28 @@ env:
   DOTNET_VERSION: '6.0'
 
 jobs:
-#  build_and_test:
-#    name: Build and Test
-#    runs-on: ubuntu-latest
-#    steps:
-#    - uses: actions/checkout@v3
+  build_and_test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
 
-#    - name: Setup .NET
-#      uses: actions/setup-dotnet@v1
-#      with:
-#        dotnet-version: ${{ env.DOTNET_VERSION }}
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
 
-#    - name: Restore dependencies
-#      run: dotnet restore
+    - name: Restore dependencies
+      run: dotnet restore
 
-#    - name: Build with Release configuration
-#      run: dotnet build --configuration Release --no-restore
+    - name: Build with Release configuration
+      run: dotnet build --configuration Release --no-restore
+      
+    - name: Publish build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-output
+        path: Uri.Query.String.Composer/UriQueryStringComposer/Release/netstandard2.1
 
 #    - name: Run tests
 #      run: dotnet test -v n /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=TestResults/
@@ -36,16 +42,16 @@ jobs:
 #        github-token: ${{ secrets.GITHUB_TOKEN }} 
 #        path-to-lcov: Uri.Query.String.Composer.Tests/TestResults/coverage.info
 
-  pack_and_publish:
-    name: Pack and Publish
+  check_version:
+    name: Check Version
     runs-on: ubuntu-latest
-#    needs: build_and_test
+    needs: build_and_test
 #    if: github.ref == 'refs/heads/main'
     steps:
     - uses: actions/checkout@v3
       
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
         
@@ -80,29 +86,45 @@ jobs:
       run: |
         if [ ${{steps.get-last-published-versions.outputs.result}} = ${{steps.get-package-version.outputs.package-version}} ]; then
           echo "❗️ The package version has not changed and it will not be published."
-          echo "skip_publish=true" >> $GITHUB_ENV
+          echo "SKIP_PUBLISH=true" >> $GITHUB_ENV
         else
           echo "✨ New version found and it will be published."
-          echo "skip_publish=false" >> $GITHUB_ENV
+          echo "SKIP_PUBLISH=false" >> $GITHUB_ENV
         fi
     
-    - name: Restore
-      run: dotnet restore
-    
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: build-output
       
-    - name: Pack
+    - name: Pack .nupkg
       run: dotnet pack --no-build --configuration Release Uri.Query.String.Composer/UriQueryStringComposer.csproj --output .
     
-    - name: Publish
-      run: |
-        set -e
-        dotnet nuget push *nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
-        if [ $? -ne 0 ]; then
-          echo "❌ Conflict - Package already exists at feed."
-          exit 1
-        fi
+    - name: Publish .nupkg to NUGET
+      run: dotnet nuget push *nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
+
+  pack_and_publish:
+    name: Pack and Publish
+    runs-on: ubuntu-latest
+    needs: check_version
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-output
+      
+      - name: Pack .nupkg
+        run: dotnet pack --no-build --configuration Release Uri.Query.String.Composer/UriQueryStringComposer.csproj --output .
+    
+      - name: Publish .nupkg to NUGET
+        run: dotnet nuget push *nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
     
     
 #    - name: Publish to nuget on version change
