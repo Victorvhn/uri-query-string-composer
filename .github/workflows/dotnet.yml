@@ -65,11 +65,13 @@ jobs:
     - name: Compare versions
       uses: actions/github-script@v6
       with:
-        result-encoding: string
+        result-encoding: boolean
         script: |
           try {
             const versions = JSON.parse('${{ steps.get-nuget-published-packages.outputs.response }}');
-            const lastVersions = versions[versions.length - 1];
+            const lastPublishedVersions = versions[versions.length - 1];
+            const packageVersions = ${{ steps.get-package-version.outputs.package-version }};
+            return lastPublishedVersions == packageVersions;
           } catch(error) {
             core.error("Error while reading or parsing the JSON");
             core.setFailed(error);
