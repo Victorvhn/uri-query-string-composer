@@ -114,6 +114,7 @@ jobs:
       - name: Tag release
         uses: actions/github-script@v6
         with:
+          result-encoding: string
           script: |
             github.rest.git.createRef({
               owner: context.repo.owner,
