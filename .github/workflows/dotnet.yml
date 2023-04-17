@@ -107,11 +107,11 @@ jobs:
       - name: Should publish package
         id: should-published-versions
         run: |
-          json=${{ steps.get-nuget-published-packages.outputs.response }}
+          json='${{ steps.get-nuget-published-packages.outputs.response }}'
           versions=$(echo $json | jq -r '.versions | @sh' | tr -d "'")
-          currentVersions=${{ steps.get-package-version.outputs.package-version }}
+          currentVersions='${{ steps.get-package-version.outputs.package-version }}'
           
-          if [[ " ${versions[@]} " =~ " 3.0.0 " ]]; then
+          if [[ " ${versions[@]} " =~ " ${currentVersions} " ]]; then
             echo "Aqui 1"
             echo "publish=no" >> $GITHUB_OUTPUT
           else
