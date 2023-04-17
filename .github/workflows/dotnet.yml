@@ -115,11 +115,13 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            github.rest.git.createRef({
+            github.rest.git.createTag({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: 'refs/tags/v${{ needs.check_version.outputs.version }}',
-              sha: context.sha
+              tag: 'v${{ needs.check_version.outputs.version }}'
+              message: 'new release merged'
+              object: context.sha,
+              type: 'commit'
             })
     
 #    - name: Publish to github on version change
