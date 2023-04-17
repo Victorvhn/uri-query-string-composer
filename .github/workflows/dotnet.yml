@@ -68,8 +68,8 @@ jobs:
         result-encoding: number
         script: |
           try {
-            const versions = JSON.parse('${{ steps.get-nuget-published-packages.outputs.response }}');
-            const lastPublishedVersions = versions[versions.length - 1];
+            const json = JSON.parse('${{ steps.get-nuget-published-packages.outputs.response }}');
+            const lastPublishedVersions = json.versions[versions.length - 1];
             const packageVersions = ${{ steps.get-package-version.outputs.package-version }};
             return lastPublishedVersions == packageVersions;
           } catch(error) {
