@@ -64,6 +64,7 @@ jobs:
         
     - name: Compare versions
       uses: actions/github-script@v6
+      id: get-last-published-versions
       with:
         result-encoding: string
         script: |
@@ -75,6 +76,9 @@ jobs:
             core.error("Error while reading or parsing the JSON");
             core.setFailed(error);
           }
+          
+    - name: Get result
+      run: echo "${{steps.get-last-published-versions.outputs.result}}"
         
 #    - name: Publish to nuget on version change
 #      uses: alirezanet/publish-nuget@v3.0.4
