@@ -120,8 +120,6 @@ jobs:
             const parts = version.split('-');
             const isPreRelease = parts.length > 1;
             
-            console.log(isPreRelease);
-            
             github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
