@@ -19,19 +19,19 @@ jobs:
         run: |
           json=['1.0.0','2.0.0']
           if [[ " ${json[@]} " =~ " '3.0.0' " ]]; then
-            echo "publish_package='false'" >> $GITHUB_OUTPUT
+            echo "publish=no" >> $GITHUB_OUTPUT
           else
-            echo "publish_package='true'" >> $GITHUB_OUTPUT
+            echo "publish=yes" >> $GITHUB_OUTPUT
           fi
     outputs:
-      publish_package: ${{ steps.set.outputs.publish_package }}
+      publish: ${{ steps.set.outputs.publish }}
       
   b:
     name: b
     runs-on: ubuntu-latest
     needs:
       - a
-    if: needs.a.outputs.publish_package == 'true'
+    if: needs.a.outputs.publish == 'yes'
     steps:
       - run: echo "B"
 
