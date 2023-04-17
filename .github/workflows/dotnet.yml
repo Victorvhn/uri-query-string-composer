@@ -75,15 +75,17 @@ jobs:
         url: 'https://api.nuget.org/v3-flatcontainer/uri.querystring.composer/index.json'
         method: 'GET'
         
-    - name: Check published version
+    - name: Check published versions
       uses: actions/github-script@v6
       id: check-published-versions
       with:
         result-encoding: string
         script: |
           try {
-            const { versions } = JSON.parse('${{ steps.get-nuget-published-packages.outputs.response }}');
-            const includes = versions.includes(${{ steps.get-package-version.outputs.package-version }});
+            const json = JSON.parse('${{ steps.get-nuget-published-packages.outputs.response }}');
+            const versions = json.versions;
+            const packageVersions = '${{ steps.get-package-version.outputs.package-version }}';
+            const includes = versions.includes(packageVersions);
             
             if (includes) {
               echo "❗️ The package version has not changed and it will not be published."
