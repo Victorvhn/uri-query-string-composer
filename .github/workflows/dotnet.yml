@@ -119,8 +119,8 @@ jobs:
             github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: 'refs/tags/v1.2.0'
-              sha: context.sha,
+              ref: 'refs/tags/v${{ needs.check_version.outputs.version }}',
+              sha: context.sha
             })
     
 #    - name: Publish to github on version change
