@@ -76,7 +76,7 @@ jobs:
     
     - name: Check published versions
       id: check-published-versions
-      run: echo "result={contains(fromJson('${{ steps.get-nuget-published-packages.outputs.response }}'), '${{ steps.get-package-version.outputs.package-version }}')}" >> $GITHUB_OUTPUT
+      run: echo contains(fromJson('${{ steps.get-nuget-published-packages.outputs.response }}'), '${{ steps.get-package-version.outputs.package-version }}') >> $GITHUB_OUTPUT
       
   publish_package:
     name: Publish package
