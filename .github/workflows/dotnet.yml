@@ -75,31 +75,28 @@ jobs:
         url: 'https://api.nuget.org/v3-flatcontainer/uri.querystring.composer/index.json'
         method: 'GET'
         
-    - name: Get last published versions
+    - name: Check published version
       uses: actions/github-script@v6
-      id: get-last-published-versions
+      id: check-published-versions
       with:
         result-encoding: string
         script: |
           try {
-            const json = JSON.parse('${{ steps.get-nuget-published-packages.outputs.response }}');
-            return json.versions[json.versions.length - 1];
+            const { versions } = JSON.parse('${{ steps.get-nuget-published-packages.outputs.response }}');
+            const includes = versions.includes(${{ steps.get-package-version.outputs.package-version }});
+            
+            if (includes) {
+              echo "❗️ The package version has not changed and it will not be published."
+              echo "PUBLISH_PACKAGE='false'" >> $GITHUB_ENV
+            } else {
+              echo "✨ New version found and it will be published."
+              echo "PUBLISH_PACKAGE='true'" >> $GITHUB_ENV
+            }
           } catch(error) {
             core.error("❗️ Error while reading or parsing the JSON");
             core.setFailed(error);
           }
           
-    - name: Compare results
-      id: compare-versions
-      run: |
-        if [ ${{steps.get-last-published-versions.outputs.result}} = ${{steps.get-package-version.outputs.package-version}} ]; then
-          echo "❗️ The package version has not changed and it will not be published."
-          echo "PUBLISH_PACKAGE='false'" >> $GITHUB_ENV
-        else
-          echo "✨ New version found and it will be published."
-          echo "PUBLISH_PACKAGE='true'" >> $GITHUB_ENV
-        fi
-      
   publish_package:
     name: Publish package
     runs-on: ubuntu-latest
