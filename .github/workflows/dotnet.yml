@@ -73,40 +73,17 @@ jobs:
       with:
         url: 'https://api.nuget.org/v3-flatcontainer/uri.querystring.composer/index.json'
         method: 'GET'
-        
+    
     - name: Check published versions
-      uses: actions/github-script@v6
       id: check-published-versions
-      with:
-        result-encoding: string
-        script: |
-          try {
-            const json = JSON.parse('${{ steps.get-nuget-published-packages.outputs.response }}');
-            const packageVersions = '${{ steps.get-package-version.outputs.package-version }}';
-            const isPackageAlreadyPublished = json.versions.includes(packageVersions);
-            
-            if (isPackageAlreadyPublished) {
-              console.log('❗️ The package version has not changed and it will not be published.');
-              return 'false'
-            } else {
-              console.log('✨ New version found and it will be published.');
-              return 'true';
-            }
-          } catch(error) {
-            core.error("❗️ Error while reading or parsing the JSON");
-            core.setFailed(error);
-          }
-          
+      run: echo "result={contains(fromJson('${{ steps.get-nuget-published-packages.outputs.response }}'), '${{ steps.get-package-version.outputs.package-version }}')}" >> $GITHUB_OUTPUT
+      
   publish_package:
     name: Publish package
     runs-on: ubuntu-latest
-    needs: [check_version]
-#    if: ${{ needs.check_version.check-published-versions.outputs.result == 'true' }}
+    needs: check_version
+    if: ${{ needs.check_version.check-published-versions.outputs.result == 'true' }}
     steps:
-      - name: A
-        run: |
-          echo ${{ needs.check_version.check-published-versions }}
-        
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
