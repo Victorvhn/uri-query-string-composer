@@ -17,7 +17,7 @@ jobs:
       - run: echo "A"
       - id: set
         run: |
-          json=['1.0.0','2.0.0']
+          json=('1.0.0' '2.0.0')
           if [[ " ${json[@]} " =~ " '2.0.0' " ]]; then
             echo "Aqui 1"
             echo "publish=no" >> $GITHUB_OUTPUT
