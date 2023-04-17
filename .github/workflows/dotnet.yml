@@ -80,7 +80,9 @@ jobs:
       run: |
         if [ ${{steps.get-last-published-versions.outputs.result}} = ${{steps.get-package-version.outputs.package-version}} ]; then
           echo "✨ The package version has not changed and will not be published."
-          exit 1
+          echo "::set-env name=SKIP_PUBLISH::true"
+        else
+          echo "::set-env name=SKIP_PUBLISH::false"
         
 #    - name: Publish to nuget on version change
 #      uses: alirezanet/publish-nuget@v3.0.4
