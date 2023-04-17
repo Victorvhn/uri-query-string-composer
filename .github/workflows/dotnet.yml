@@ -83,19 +83,18 @@ jobs:
         script: |
           try {
             const json = JSON.parse('${{ steps.get-nuget-published-packages.outputs.response }}');
-            const versions = json.versions;
             const packageVersions = '${{ steps.get-package-version.outputs.package-version }}';
-            const isPackageAlreadyPublished = versions.includes(packageVersions);
-            
+            const isPackageAlreadyPublished = json.versions.includes(packageVersions);
+
             if (isPackageAlreadyPublished) {
-              echo "❗️ The package version has not changed and it will not be published."
-              echo "PUBLISH_PACKAGE='false'" >> $GITHUB_ENV
+
               return 'false'
             } else {
-              echo "✨ New version found and it will be published."
-              echo "PUBLISH_PACKAGE='true'" >> $GITHUB_ENV
-              return 'true'
+
+              return 'true';
             }
+            
+            return 'false';
           } catch(error) {
             core.error("❗️ Error while reading or parsing the JSON");
             core.setFailed(error);
