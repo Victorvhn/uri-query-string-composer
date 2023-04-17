@@ -21,7 +21,7 @@ jobs:
           if [[ " ${json[@]} " =~ " '3.0.0' " ]]; then
             echo "publish_package='false'" >> $GITHUB_OUTPUT
           else
-            echo "publish_package='false'" >> $GITHUB_OUTPUT
+            echo "publish_package='true'" >> $GITHUB_OUTPUT
           fi
     outputs:
       publish_package: ${{ steps.set.outputs.publish_package }}
