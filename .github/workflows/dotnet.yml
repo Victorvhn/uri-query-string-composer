@@ -113,11 +113,14 @@ jobs:
     
       - name: Tag release
         uses: actions/github-script@v6
-        id: my-script
         with:
-          result-encoding: string
           script: |
-            console.log(context)
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/v${{ needs.check_version.outputs.version }}',
+              sha: context.sha
+            })
     
 #    - name: Publish to github on version change
 #      uses: Victorvhn/publish-github@v3.0.0
