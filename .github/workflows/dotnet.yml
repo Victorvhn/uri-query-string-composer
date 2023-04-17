@@ -1,4 +1,4 @@
-name: Build and Test
+name: Build, Test and Publish
 
 on:
   push:
@@ -14,58 +14,115 @@ jobs:
     name: Build and Test
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-    - name: Restore dependencies
-      run: dotnet restore
+      - name: Restore dependencies
+        run: |
+          dotnet restore
+          echo "✅ Project restored"
 
-    - name: Build with Release configuration
-      run: dotnet build --configuration Release --no-restore
+      - name: Build with Release configuration
+        run: |
+          dotnet build --configuration Release --no-restore
+          echo "✅ Project builded"
 
-    - name: Run tests
-      run: dotnet test -v n /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=TestResults/
+      - name: Run tests
+        run: |
+          dotnet test -v n /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=TestResults/
+          echo "✅ Tests executed"
       
-    - name: Publish coverage report to coveralls.io   
-      uses: coverallsapp/github-action@master   
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }} 
-        path-to-lcov: Uri.Query.String.Composer.Tests/TestResults/coverage.info
+      - name: Publish coverage report to coveralls.io   
+        uses: coverallsapp/github-action@master   
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }} 
+          path-to-lcov: Uri.Query.String.Composer.Tests/TestResults/coverage.info
+        
+      - name: Pack .nupkg
+        run: |
+          dotnet pack --no-build --configuration Release Uri.Query.String.Composer/UriQueryStringComposer.csproj --output ./package
+          echo "✅ Package created"
+    
+      - name: Upload package artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: package
+          path: ./package
 
-  pack_and_publish:
-    name: Pack and Publish
+  check_version:
+    name: Check Version
     runs-on: ubuntu-latest
     needs: build_and_test
     if: github.ref == 'refs/heads/main'
     steps:
-    - uses: actions/checkout@v3
-      
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
+      - uses: actions/checkout@v3
         
-    - name: Publish to nuget on version change
-      uses: alirezanet/publish-nuget@v3.0.4
-      with:
-        PROJECT_FILE_PATH: Uri.Query.String.Composer/UriQueryStringComposer.csproj
-        PACKAGE_NAME: Uri.QueryString.Composer
-        VERSION_REGEX: <PackageVersion>(.*)<\/PackageVersion>
-        NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
-
-    - name: Publish to github on version change
-      uses: Victorvhn/publish-github@v3.0.0
-      with:
-        PROJECT_FILE_PATH: Uri.Query.String.Composer/UriQueryStringComposer.csproj
-        PACKAGE_NAME: Uri.QueryString.Composer
-        VERSION_REGEX: <PackageVersion>(.*)<\/PackageVersion>
-        GITHUB_KEY: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-        GITHUB_USER: victorvhn
-        TAG_COMMIT: false
-
-#    - name: Publish to github on version change
-#      run: dotnet nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/victorvhn/index.json" --skip-duplicate
+      - name: Get project version
+        uses: kzrnm/get-net-sdk-project-versions-action@v1
+        id: get-package-version
+        with:
+          proj-path: Uri.Query.String.Composer/UriQueryStringComposer.csproj
+          
+      - name: Get NUGET published versions
+        uses: fjogeleit/http-request-action@v1
+        id: get-nuget-published-packages
+        with:
+          url: 'https://api.nuget.org/v3-flatcontainer/uri.querystring.composer/index.json'
+          method: 'GET'
+    
+      - name: Should publish package
+        id: should-published-versions
+        run: |
+          json='${{ steps.get-nuget-published-packages.outputs.response }}'
+          versions=$(echo $json | jq -r '.versions | @sh' | tr -d "'")
+          currentVersions='${{ steps.get-package-version.outputs.package-version }}'
+          
+          if [[ " ${versions[@]} " =~ " ${currentVersions} " ]]; then
+            echo "❗️ The package version has not changed and it will not be published."
+            echo "publish=false" >> $GITHUB_OUTPUT
+          else
+            echo "✨ New version found and it will be published."
+            echo "publish=true" >> $GITHUB_OUTPUT
+          fi
+    outputs:
+      publish: ${{ steps.should-published-versions.outputs.publish }}
+      version: ${{ steps.get-package-version.outputs.package-version }}
+    
+  publish_package:
+    name: Publish package
+    runs-on: ubuntu-latest
+    needs: check_version
+    if: ${{ needs.check_version.outputs.publish == 'true' }}
+    steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: package
+    
+      - name: Publish .nupkg to NUGET
+        run: dotnet nuget push *nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
+    
+      - name: Create release
+        uses: actions/github-script@v6
+        with:
+          result-encoding: string
+          script: |
+            const version = '${{ needs.check_version.outputs.version }}';
+            const parts = version.split('-');
+            const isPreRelease = parts.length > 1;
+            
+            github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: 'v${{ needs.check_version.outputs.version }}',
+              prerelease: isPreRelease
+            })
