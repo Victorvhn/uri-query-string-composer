@@ -80,9 +80,9 @@ jobs:
       run: |
         if [ ${{steps.get-last-published-versions.outputs.result}} = ${{steps.get-package-version.outputs.package-version}} ]; then
           echo "✨ The package version has not changed and will not be published."
-          echo "::set-env name=SKIP_PUBLISH::true"
+          echo "skip_publish=true" >> $GITHUB_ENV
         else
-          echo "::set-env name=SKIP_PUBLISH::false"
+          echo "skip_publish=false" >> $GITHUB_ENV
         
 #    - name: Publish to nuget on version change
 #      uses: alirezanet/publish-nuget@v3.0.4
