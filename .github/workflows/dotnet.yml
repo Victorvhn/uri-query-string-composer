@@ -65,7 +65,7 @@ jobs:
     - name: Compare versions
       uses: actions/github-script@v6
       with:
-        result-encoding: number
+        result-encoding: string
         script: |
           try {
             const json = JSON.parse('${{ steps.get-nuget-published-packages.outputs.response }}');
