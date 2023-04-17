@@ -26,21 +26,24 @@ jobs:
 
     - name: Build with Release configuration
       run: dotnet build --configuration Release --no-restore
-      
-    - name: Publish build artifacts
+    
+    - name: Pack .nupkg
+      run: dotnet pack --no-build --configuration Release Uri.Query.String.Composer/UriQueryStringComposer.csproj --output ./package
+    
+    - name: Publish package
       uses: actions/upload-artifact@v3
       with:
-        name: build-output
-        path: ./Uri.Query.String.Composer/bin/Release/netstandard2.1
+        name: package
+        path: ./package
 
-#    - name: Run tests
-#      run: dotnet test -v n /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=TestResults/
+    - name: Run tests
+      run: dotnet test -v n /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=TestResults/
       
-#    - name: Publish coverage report to coveralls.io   
-#      uses: coverallsapp/github-action@master   
-#      with:
-#        github-token: ${{ secrets.GITHUB_TOKEN }} 
-#        path-to-lcov: Uri.Query.String.Composer.Tests/TestResults/coverage.info
+    - name: Publish coverage report to coveralls.io   
+      uses: coverallsapp/github-action@master   
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }} 
+        path-to-lcov: Uri.Query.String.Composer.Tests/TestResults/coverage.info
 
   check_version:
     name: Check Version
@@ -103,13 +106,10 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
-          name: build-output
-      
-      - name: Pack .nupkg
-        run: dotnet pack --no-build --configuration Release Uri.Query.String.Composer/UriQueryStringComposer.csproj --output .
+          name: package
     
       - name: Publish .nupkg to NUGET
-        run: dotnet nuget push *nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
+        run: dotnet nuget push ./package/*nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
     
     
 #    - name: Publish to nuget on version change
