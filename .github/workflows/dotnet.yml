@@ -18,7 +18,7 @@ jobs:
       - id: set
         run: |
           json=['1.0.0','2.0.0']
-          if [[ " ${json[@]} " =~ " '1.0.0' " ]]; then
+          if [[ " ${json[@]} " =~ " '3.0.0' " ]]; then
             echo "publish_package=false" >> $GITHUB_OUTPUT
           else
             echo "publish_package=true" >> $GITHUB_OUTPUT
