@@ -8,6 +8,7 @@ on:
 
 env:
   DOTNET_VERSION: '6.0'
+  SKIP_PUBLISH: true
 
 jobs:
   build_and_test:
@@ -127,6 +128,3 @@ jobs:
 #        GITHUB_KEY: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 #        GITHUB_USER: victorvhn
 #        TAG_COMMIT: false
-
-#    - name: Publish to github on version change
-#      run: dotnet nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/victorvhn/index.json" --skip-duplicate
