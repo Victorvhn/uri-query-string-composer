@@ -84,18 +84,14 @@ jobs:
             const json = JSON.parse('${{ steps.get-nuget-published-packages.outputs.response }}');
             const packageVersions = '${{ steps.get-package-version.outputs.package-version }}';
             const isPackageAlreadyPublished = json.versions.includes(packageVersions);
-            console.log('1️⃣', isPackageAlreadyPublished);
             
             if (isPackageAlreadyPublished) {
-              console.log('2️⃣');
+              console.log('❗️ The package version has not changed and it will not be published.');
               return 'false'
             } else {
-              console.log('3️⃣');
+              console.log('✨ New version found and it will be published.');
               return 'true';
             }
-            
-            console.log('4️⃣');
-            return 'false';
           } catch(error) {
             core.error("❗️ Error while reading or parsing the JSON");
             core.setFailed(error);
