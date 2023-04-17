@@ -85,9 +85,9 @@ jobs:
             const json = JSON.parse('${{ steps.get-nuget-published-packages.outputs.response }}');
             const versions = json.versions;
             const packageVersions = '${{ steps.get-package-version.outputs.package-version }}';
-            const includes = versions.includes(packageVersions);
+            const isPackageAlreadyPublished = versions.includes(packageVersions);
             
-            if (includes) {
+            if (isPackageAlreadyPublished) {
               echo "❗️ The package version has not changed and it will not be published."
               echo "PUBLISH_PACKAGE='false'" >> $GITHUB_ENV
               return 'false'
