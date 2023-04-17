@@ -17,7 +17,7 @@ jobs:
       - run: echo "A"
       - id: set
         run: |
-          echo "run_job_b=no" >> $GITHUB_OUTPUT
+          echo "run_job_b=contains(['1','2','3'], '1')" >> $GITHUB_OUTPUT
     outputs:
       run_job_b: ${{ steps.set.outputs.run_job_b }}
       
@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - a
-    if: needs.a.outputs.run_job_b == 'no'
+    if: needs.a.outputs.run_job_b == 'true'
     steps:
       - run: echo "B"
 
