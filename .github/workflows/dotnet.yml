@@ -107,6 +107,9 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: package
+      
+      - name: Files
+        run: ls
     
       - name: Publish .nupkg to NUGET
         run: dotnet nuget push package/*nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
