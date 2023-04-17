@@ -116,19 +116,13 @@ jobs:
         with:
           result-encoding: string
           script: |
-            version=${{ needs.check_version.outputs.version }}
-            parts=(${version//-/ })
-            isPrerelease=false
-            
-            if [ "${#parts[@]}" -eq 2 ] && [ -n "${parts[1]}" ]; then
-              isPrerelease=true
-            else
-              isPrerelease=false
-            fi
+            const version = '${{ needs.check_version.outputs.version }}';
+            const parts = version.split('-');
+            const isPreRelease = parts.length > 1;
             
             github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag_name: 'v${{ needs.check_version.outputs.version }}',
-              prerelease: $isPrerelease
+              prerelease: isPreRelease
             })
