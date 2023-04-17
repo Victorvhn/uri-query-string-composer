@@ -105,8 +105,7 @@ jobs:
     steps:
       - name: A
         run: |
-          stringified=$(echo $needs.check_version | jq -r tostring)
-          echo $stringified
+          echo ${{ needs.check_version.check-published-versions.outputs.result }}
         
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
