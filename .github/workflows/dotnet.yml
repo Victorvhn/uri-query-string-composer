@@ -62,7 +62,7 @@ jobs:
         url: 'https://api.nuget.org/v3-flatcontainer/uri.querystring.composer/index.json'
         method: 'GET'
         
-    - name: Compare versions
+    - name: Get last published versions
       uses: actions/github-script@v6
       id: get-last-published-versions
       with:
@@ -72,12 +72,15 @@ jobs:
             const json = JSON.parse('${{ steps.get-nuget-published-packages.outputs.response }}');
             return json.versions[json.versions.length - 1];
           } catch(error) {
-            core.error("Error while reading or parsing the JSON");
+            core.error("❗️ Error while reading or parsing the JSON");
             core.setFailed(error);
           }
           
-    - name: Get result
-      run: echo "${{steps.get-last-published-versions.outputs.result}}"
+    - name: Compare results
+      run: |
+        if [ ${{steps.get-last-published-versions.outputs.result}} = ${{steps.get-package-version.outputs.package-version}} ]; then
+          echo "✨ The package version has not changed and will not be published."
+          exit 1
         
 #    - name: Publish to nuget on version change
 #      uses: alirezanet/publish-nuget@v3.0.4
