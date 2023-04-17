@@ -90,9 +90,11 @@ jobs:
             if (includes) {
               echo "❗️ The package version has not changed and it will not be published."
               echo "PUBLISH_PACKAGE='false'" >> $GITHUB_ENV
+              return 'false'
             } else {
               echo "✨ New version found and it will be published."
               echo "PUBLISH_PACKAGE='true'" >> $GITHUB_ENV
+              return 'true'
             }
           } catch(error) {
             core.error("❗️ Error while reading or parsing the JSON");
