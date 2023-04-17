@@ -111,22 +111,15 @@ jobs:
 #      - name: Publish .nupkg to NUGET
 #        run: dotnet nuget push *nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
     
-      - name: Tag release
+      - name: Create release
         uses: actions/github-script@v6
         with:
           result-encoding: string
           script: |
-            github.rest.git.createTag({
+            github.rest.git.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              tag: 'v1.0.11',
-              message: 'new release',
-              object: context.sha,
-              type: 'commit',
-              tagger: {
-                name: "Victor Hugo do Nascimento",
-                email: "victor.hugo.nascimento58@gmail.com"
-              }
+              tag_name: 'v1.0.11'
             })
     
 #    - name: Publish to github on version change
