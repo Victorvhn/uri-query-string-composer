@@ -10,36 +10,6 @@ env:
   DOTNET_VERSION: '6.0'
 
 jobs:
-  a:
-    name: a
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "A"
-      - id: set
-        run: |
-          json='{"versions": ["1.0.0","2.0.0"]}'
-          versions=$(echo $json | jq -r '.versions | @sh' | tr -d "'")
-          echo "$versions"
-          
-          if [[ " ${versions[@]} " =~ " 3.0.0 " ]]; then
-            echo "Aqui 1"
-            echo "publish=no" >> $GITHUB_OUTPUT
-          else
-            echo "Aqui 2"
-            echo "publish=yes" >> $GITHUB_OUTPUT
-          fi
-    outputs:
-      publish: ${{ steps.set.outputs.publish }}
-      
-  b:
-    name: b
-    runs-on: ubuntu-latest
-    needs:
-      - a
-    if: needs.a.outputs.publish == 'yes'
-    steps:
-      - run: echo "B"
-
   build_and_test:
     name: Build and Test
     runs-on: ubuntu-latest
@@ -112,10 +82,10 @@ jobs:
           currentVersions='${{ steps.get-package-version.outputs.package-version }}'
           
           if [[ " ${versions[@]} " =~ " ${currentVersions} " ]]; then
-            echo "Aqui 1"
+            echo "❗️ The package version has not changed and it will not be published."
             echo "publish=no" >> $GITHUB_OUTPUT
           else
-            echo "Aqui 2"
+            echo "✨ New version found and it will be published."
             echo "publish=yes" >> $GITHUB_OUTPUT
           fi
     outputs:
