@@ -21,7 +21,7 @@ jobs:
           versions=$(echo $json | jq -r '.versions | @sh' | tr -d "'")
           echo "$versions"
           
-          if [[ " ${json[@]} " =~ " 2.0.0 " ]]; then
+          if [[ " ${versions[@]} " =~ " 2.0.0 " ]]; then
             echo "Aqui 1"
             echo "publish=no" >> $GITHUB_OUTPUT
           else
