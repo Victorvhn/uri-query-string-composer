@@ -8,6 +8,7 @@ on:
 
 env:
   DOTNET_VERSION: '6.0'
+  PUBLISH_PACKAGE: 'false'
 
 jobs:
   build_and_test:
@@ -93,17 +94,19 @@ jobs:
       run: |
         if [ ${{steps.get-last-published-versions.outputs.result}} = ${{steps.get-package-version.outputs.package-version}} ]; then
           echo "❗️ The package version has not changed and it will not be published."
-          return false
+          echo "PUBLISH_PACKAGE='false'" >> $GITHUB_ENV
         else
           echo "✨ New version found and it will be published."
-          return true
+          echo "PUBLISH_PACKAGE='true'" >> $GITHUB_ENV
         fi
       
   publish_package:
     name: Publish package
     runs-on: ubuntu-latest
     needs: [check_version]
-    if: ${{ check_versions.compare-versions }} == 'true'
+    env:
+      PUBLISH_PACKAGE: ${{ needs.check_version.outputs.PUBLISH_PACKAGE }}
+    if: ${{ env.PUBLISH_PACKAGE == 'true' }}
     steps:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
