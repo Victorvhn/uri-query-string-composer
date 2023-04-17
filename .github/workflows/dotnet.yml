@@ -17,7 +17,7 @@ jobs:
       - run: echo "A"
       - id: set
         run: |
-          echo "::set-output name=run_job_b::no"
+          echo "run_job_b=no" >> $GITHUB_OUTPUT
     outputs:
       run_job_b: ${{ steps.set.outputs.run_job_b }}
       
@@ -33,46 +33,45 @@ jobs:
   build_and_test:
     name: Build and Test
     runs-on: ubuntu-latest
-    needs: b
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-    - name: Restore dependencies
-      run: |
-        dotnet restore
-        echo "✅ Project restored"
+      - name: Restore dependencies
+        run: |
+          dotnet restore
+          echo "✅ Project restored"
 
-    - name: Build with Release configuration
-      run: |
-        dotnet build --configuration Release --no-restore
-        echo "✅ Project builded"
+      - name: Build with Release configuration
+        run: |
+          dotnet build --configuration Release --no-restore
+          echo "✅ Project builded"
 
-    - name: Run tests
-      run: |
-        dotnet test -v n /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=TestResults/
-        echo "✅ Tests executed"
+      - name: Run tests
+        run: |
+          dotnet test -v n /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=TestResults/
+          echo "✅ Tests executed"
       
-    - name: Publish coverage report to coveralls.io   
-      uses: coverallsapp/github-action@master   
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }} 
-        path-to-lcov: Uri.Query.String.Composer.Tests/TestResults/coverage.info
+      - name: Publish coverage report to coveralls.io   
+        uses: coverallsapp/github-action@master   
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }} 
+          path-to-lcov: Uri.Query.String.Composer.Tests/TestResults/coverage.info
         
-    - name: Pack .nupkg
-      run: |
-        dotnet pack --no-build --configuration Release Uri.Query.String.Composer/UriQueryStringComposer.csproj --output ./package
-        echo "✅ Package created"
+      - name: Pack .nupkg
+        run: |
+          dotnet pack --no-build --configuration Release Uri.Query.String.Composer/UriQueryStringComposer.csproj --output ./package
+          echo "✅ Package created"
     
-    - name: Upload package artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: package
-        path: ./package
+      - name: Upload package artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: package
+          path: ./package
 
   check_version:
     name: Check Version
@@ -80,27 +79,24 @@ jobs:
     needs: build_and_test
 #    if: github.ref == 'refs/heads/main'
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         
-    - name: Get project version
-      uses: kzrnm/get-net-sdk-project-versions-action@v1
-      id: get-package-version
-      with:
-        proj-path: Uri.Query.String.Composer/UriQueryStringComposer.csproj
+      - name: Get project version
+        uses: kzrnm/get-net-sdk-project-versions-action@v1
+        id: get-package-version
+        with:
+          proj-path: Uri.Query.String.Composer/UriQueryStringComposer.csproj
           
-    - name: Get NUGET published versions
-      uses: fjogeleit/http-request-action@v1
-      id: get-nuget-published-packages
-      with:
-        url: 'https://api.nuget.org/v3-flatcontainer/uri.querystring.composer/index.json'
-        method: 'GET'
+      - name: Get NUGET published versions
+        uses: fjogeleit/http-request-action@v1
+        id: get-nuget-published-packages
+        with:
+          url: 'https://api.nuget.org/v3-flatcontainer/uri.querystring.composer/index.json'
+          method: 'GET'
     
-    - name: Should publish package
-      id: should-published-versions
-      run: echo "is_package_published=contains(fromJson('${{ steps.get-nuget-published-packages.outputs.response }}'), '${{ steps.get-package-version.outputs.package-version }}')" >> $GITHUB_OUTPUT
-
-    outputs:
-      is_package_published: ${{ steps.set.outputs.is_package_published }}
+      - name: Should publish package
+        id: should-published-versions
+        run: echo "is_package_published=contains(fromJson('${{ steps.get-nuget-published-packages.outputs.response }}'), '${{ steps.get-package-version.outputs.package-version }}')" >> $GITHUB_OUTPUT
     
   publish_package:
     name: Publish package
