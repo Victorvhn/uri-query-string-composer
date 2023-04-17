@@ -79,11 +79,18 @@ jobs:
     - name: Compare results
       run: |
         if [ ${{steps.get-last-published-versions.outputs.result}} = ${{steps.get-package-version.outputs.package-version}} ]; then
-          echo "✨ The package version has not changed and will not be published."
+          echo "❗️ The package version has not changed and it will not be published."
           echo "skip_publish=true" >> $GITHUB_ENV
         else
+          echo "✨ New version found and it will be published."
           echo "skip_publish=false" >> $GITHUB_ENV
         fi
+    
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+      
+    - name: Pack
+      run: dotnet pack --no-build --configuration Release Uri.Query.String.Composer/UriQueryStringComposer.csproj --output .
         
 #    - name: Publish to nuget on version change
 #      uses: alirezanet/publish-nuget@v3.0.4
