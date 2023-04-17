@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - a
-    if: needs.a.outputs.run_job_b == 'yes'
+    if: needs.a.outputs.run_job_b == 'no'
     steps:
       - run: echo "B"
 
