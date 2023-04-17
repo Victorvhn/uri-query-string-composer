@@ -31,7 +31,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: build-output
-        path: ./Uri.Query.String.Composer/UriQueryStringComposer/bin/Release/netstandard2.1
+        path: ./Uri.Query.String.Composer/bin/Release/netstandard2.1
 
 #    - name: Run tests
 #      run: dotnet test -v n /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=TestResults/
