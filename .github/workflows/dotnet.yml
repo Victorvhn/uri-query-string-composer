@@ -83,6 +83,7 @@ jobs:
           echo "skip_publish=true" >> $GITHUB_ENV
         else
           echo "skip_publish=false" >> $GITHUB_ENV
+        fi
         
 #    - name: Publish to nuget on version change
 #      uses: alirezanet/publish-nuget@v3.0.4
