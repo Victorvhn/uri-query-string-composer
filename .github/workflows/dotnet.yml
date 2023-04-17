@@ -26,15 +26,6 @@ jobs:
 
     - name: Build with Release configuration
       run: dotnet build --configuration Release --no-restore
-    
-    - name: Pack .nupkg
-      run: dotnet pack --no-build --configuration Release Uri.Query.String.Composer/UriQueryStringComposer.csproj --output ./package
-    
-    - name: Publish package
-      uses: actions/upload-artifact@v3
-      with:
-        name: package
-        path: ./package
 
     - name: Run tests
       run: dotnet test -v n /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=TestResults/
@@ -44,6 +35,15 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }} 
         path-to-lcov: Uri.Query.String.Composer.Tests/TestResults/coverage.info
+        
+    - name: Pack .nupkg
+      run: dotnet pack --no-build --configuration Release Uri.Query.String.Composer/UriQueryStringComposer.csproj --output ./package
+    
+    - name: Upload package artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: package
+        path: ./package
 
   check_version:
     name: Check Version
@@ -109,7 +109,7 @@ jobs:
           name: package
     
       - name: Publish .nupkg to NUGET
-        run: dotnet nuget push ./package/*nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
+        run: dotnet nuget push package/*nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
     
     
 #    - name: Publish to nuget on version change
